@@ -2,4 +2,8 @@
 Description=PW 1.7.3 nightly backup
 [Service]
 Type=oneshot
+# The backup starts the game server again. Without KillMode=process, systemd kills
+# everything the service started (the whole game server) as soon as the backup ends.
+KillMode=process
+TimeoutStartSec=15min
 ExecStart=/bin/bash -c '/root/pw_backup.sh >> /var/log/pw_backup.log 2>&1'
