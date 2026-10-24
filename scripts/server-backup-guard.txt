@@ -1,0 +1,4 @@
+Add this as line 2 of /opt/server (right under the #! line) so manual start/stop/restart
+can't collide with the backup (the backup sets PW_BACKUP=1 for its own calls):
+
+if [ -e /run/pw_backup.running ] && [ -z "${PW_BACKUP:-}" ]; then echo "Nightly backup in progress - try again in a few minutes."; exit 1; fi

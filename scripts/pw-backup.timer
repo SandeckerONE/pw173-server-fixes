@@ -1,0 +1,7 @@
+[Unit]
+Description=PW 1.7.3 backup at midnight (change the time zone to yours)
+[Timer]
+OnCalendar=*-*-* 00:00:00 America/Chicago
+Persistent=false
+[Install]
+WantedBy=timers.target

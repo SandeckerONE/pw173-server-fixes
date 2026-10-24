@@ -1,0 +1,5 @@
+[Unit]
+Description=PW 1.7.3 nightly backup
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/root/pw_backup.sh >> /var/log/pw_backup.log 2>&1'

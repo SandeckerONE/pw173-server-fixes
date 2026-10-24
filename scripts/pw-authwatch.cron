@@ -1,0 +1,3 @@
+# /etc/cron.d/pw-authwatch - every 5 minutes: restart the server if authd lost its database.
+# Skips while the nightly backup runs (/run/pw_backup.running).
+*/5 * * * * root [ ! -e /run/pw_backup.running ] && /usr/local/bin/pw_authcheck.sh | grep -q "VERDICT: BROKEN" && { echo "$(date) authd broken, restarting" >> /var/log/pw_authwatch.log; /sbin/server restart >> /var/log/pw_authwatch.log 2>&1; }
