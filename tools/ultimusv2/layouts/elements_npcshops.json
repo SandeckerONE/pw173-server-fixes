@@ -1,0 +1,32 @@
+{
+  "name": "NPC shops in elements.data, 1.7.3 e344",
+  "list_header": "every elements.data list we found starts with [list id u32][record count u32][record size u32] right before the first record [verified on lists 41 and 58]",
+  "shop_list": {
+    "list_id": 41, "record_size": 5448, "count_in_our_file": 174,
+    "fields": [
+      {"name": "id", "offset": 0, "type": "u32"},
+      {"name": "name", "offset": 4, "type": "utf16", "length": 64, "note": "mostly 'Goods'"},
+      {"name": "pages", "offset": 68, "count": 8, "size": 672, "note": "8 tabs"},
+      {"name": "tail", "offset": 5444, "type": "u32", "note": "0 in every record; kept"}
+    ],
+    "page": {"fields": [
+      {"name": "title", "offset": 0, "type": "utf16", "length": 32, "note": "tab title, max 15 characters"},
+      {"name": "slots", "offset": 32, "count": 32, "size": 20}
+    ]},
+    "slot": {"fields": [
+      {"name": "item_id", "offset": 0, "type": "u32", "note": "item sold; 0 = empty [verified: e.g. shop 2673 page 'Jade' sells 771-779 Broken/Orange/Red/Verdant/Black/Yellow Jade; old low-id items have small type pairs]"},
+      {"name": "extra1", "offset": 4, "type": "u32", "note": "unknown; values like 8, 20, 40, 600, 2400, 3600, 24000 seen; kept"},
+      {"name": "extra2", "offset": 8, "type": "u32", "note": "unknown; small values (e.g. 5); kept"},
+      {"name": "extra3", "offset": 12, "type": "u32", "note": "unknown; kept"},
+      {"name": "extra4", "offset": 16, "type": "u32", "note": "unknown; kept"}
+    ]}
+  },
+  "npc_list": {
+    "list_id": 58, "record_size": 1080, "count_in_our_file": 7406,
+    "fields": [
+      {"name": "id", "offset": 0, "type": "u32"},
+      {"name": "name", "offset": 4, "type": "utf16", "length": 64},
+      {"name": "sell_service", "offset": 740, "type": "u32", "note": "id of the NPC's shop record (list 41); set on 860 NPCs [verified]. e.g. Merchant Wang Song (2165) -> shop 2673"}
+    ]
+  }
+}

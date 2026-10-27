@@ -1,0 +1,65 @@
+{
+  "note": "Known versions of our data files, by md5. status: live = what UltimusV2 runs now; old = an earlier version (editing it would drop later changes); experiment = never use. Update this file when a new version goes live.",
+  "files": {
+    "elements.data": {
+      "c89984b59b8372a794a0e5c9da9f9f33": {
+        "status": "live",
+        "label": "live UltimusV2 (Palette swap, 2026-10-24)"
+      },
+      "f67769d87bcc00c0c00e58fc8fcfca31": {
+        "status": "old",
+        "label": "ORIGINAL package file, before the Palette swap"
+      },
+      "740d0109b640089d106b5a717532732d": {
+        "status": "experiment",
+        "label": "blessing experiment 2026-10-26 (reverted) - do not use"
+      }
+    },
+    "tasks.data": {
+      "17a4503239dfabbe8160b3a3aa2e478c": {
+        "status": "live",
+        "label": "live UltimusV2 (BH1 Event Gold tickets, 2026-10-24)"
+      },
+      "9abe2781e0373d25ca5a9a2b4f915b1d": {
+        "status": "old",
+        "label": "ORIGINAL package file, before the BH1 tickets"
+      }
+    },
+    "gshop1.data": {
+      "0ad7ab81590d8a1edc9c8510824ad547": {
+        "status": "live",
+        "label": "live Event Boutique, client side (blessing tickets, 2026-10-26)"
+      }
+    },
+    "gshopsev1.data": {
+      "f4b335144169f481dffbd56f042a800a": {
+        "status": "live",
+        "label": "live Event Boutique, server side (blessing tickets, 2026-10-26)"
+      },
+      "9de6b90cce36e0af2676564d539b4259": {
+        "status": "experiment",
+        "label": "5-record stub that ships with the client download - NOT the live server file"
+      }
+    },
+    "gshop.data": {
+      "ee24a66b04113fabbdc7a9015319107e": {
+        "status": "live",
+        "label": "main Boutique, your own client (3,103 records, 2026-10-26)"
+      },
+      "340cfd063dba8fd1a4ef98c891252cff": {
+        "status": "old",
+        "label": "main Boutique in the friends folder (3,101 records; probably without the two Shop>Misc test items)"
+      }
+    },
+    "gshopsev.data": {
+      "aa697497104d01a5c6472dc4fe98fade": {
+        "status": "live",
+        "label": "live main Boutique, server side (2026-10-24)"
+      },
+      "16eabdfb585794ae6160e87b563e1729": {
+        "status": "old",
+        "label": "main Boutique server copy in the friends folder (3,101 records)"
+      }
+    }
+  }
+}

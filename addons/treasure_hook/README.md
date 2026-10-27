@@ -48,7 +48,7 @@ The config is re-read a second or two after you save it. No restart is needed fo
 Back to safe at any time: `mode = log`.
 
 ## Things we learned the hard way (useful if you write your own)
-- **Board packet:** S2C opcode **434**, same layout as the public 1.7.6 source (`get_treasure_info`): `u16 434, u8 manager (0 info / 1 new board / 2 chest opened), u32 Aurum, u32 free opens, u32 closed count, u32 opened count`, then closed chests `{u32 id, u32 count, u8 prize}` and opened chests `{u32 id, u32 chest, u32 count, u8 prize}`. `gs`'s own `send_lot_info3/4` are the main Palette draw (523/524), not this. Sent raw with `send_ls_msg(gplayer const*, void const*, unsigned)`.
+- **Board packet:** built by the hook and sent raw with `send_ls_msg(gplayer const*, void const*, unsigned)` (the field order is in `conf/treasure_hook.conf`, `raw.info`). `gs`'s own `send_lot_info3/4` are the main Palette draw (523/524), not this. See "Where the board layout came from" below.
 - **Warehouse:** `AddLotInventory(id, count)`, then `GetLotInventory(unsigned&)` + `gplayer_dispatcher::send_lot_inv(n, ptr)` (opcode 433) so the client's list updates.
 - **Return true:** if `Lottery_Notice1` returns false, `CommandHandler` sends error 3, which shows as "Critical error: invalid action". Hence `hook.ret = 1`.
 - **Relog trap:** the first time the window opens after a login, the client sends type 3, the same as the Seek button, to get its board back. If you treat that as a seek, every relog costs 2 keys and deals a new board. The hook treats the first seek of each login (told apart by the link session id at `gplayer + 0xb0 / 0xb4`) as "resend the saved board".
@@ -67,7 +67,6 @@ tools/enable_hook.sh     add LD_PRELOAD to /opt/server (with backup)
 tools/disable_hook.sh    remove it again
 tools/recon_gs.sh        read-only scan of another gs build (symbols, offsets)
 tools/extract_treasure_cfg.py  print key/cost/loot lines from your elements.data
-docs/protocol_notes.md   early design notes (the findings above supersede them)
 test/                    mock gs + 252 automated checks (developer use)
 ```
 
@@ -76,3 +75,6 @@ test/                    mock gs + 252 automated checks (developer use)
 - It only acts inside a program named `gs`, only for roles in `allow_roles`, and refuses to act if a function or offset it needs is missing.
 - A board is saved before any item moves. If giving the prize fails, the board is put back and no keys are taken.
 - No network access of its own; it only writes `/opt/treasure_hook/hook.log` and the per-character board files in `/opt/treasure_hook/state/`.
+
+## Where the board layout came from
+The Treasures board packet layout used by this add-on (and the command id 197) was first read from a public "1.7.4 / 1.7.6" server source tree. That tree later turned out to be a licence-locked commercial emulator, so the project no longer uses it. The layout was then **tested against our own 1.7.3 client** (the client draws the board correctly), but it has not yet been re-derived from the client binary itself. Until it is, treat the packet layout here as *[tested, origin flagged]*. The early design notes that quoted that source were removed from this repository.

@@ -1,0 +1,28 @@
+{
+  "name": "Boutique, client file (gshop.data / gshop1.data), 1.7.3 e344",
+  "header": {"size": 8, "fields": [
+    {"name": "stamp", "offset": 0, "type": "u32", "editable": false, "note": "edition stamp, must never change; it is part of the client/server version check [verified]"},
+    {"name": "count", "offset": 4, "type": "u32", "editable": false, "note": "number of records [verified]"}
+  ]},
+  "record_size": 1448,
+  "trailer": "category_tree",
+  "trailer_note": "after the last record: per main tab a 128-byte UTF-16 name, a u32 sub-tab count, then that many 128-byte UTF-16 sub-tab names [verified on both files]",
+  "fields": [
+    {"name": "lid", "offset": 0, "type": "i32", "editable": false, "note": "local id = record index, renumbered on add/delete [verified]"},
+    {"name": "main_tab", "offset": 4, "type": "i32", "editable": true, "note": "main tab index into the category tree [verified]"},
+    {"name": "sub_tab", "offset": 8, "type": "i32", "editable": true, "note": "sub tab index [verified]"},
+    {"name": "icon_path", "offset": 12, "type": "gbk", "length": 128, "editable": false, "note": "icon file path (GBK text); kept as cloned [verified]"},
+    {"name": "item_id", "offset": 140, "type": "u32", "editable": true, "note": "item sold [verified]"},
+    {"name": "count", "offset": 144, "type": "i32", "editable": true, "note": "items per purchase; must not exceed the item's stack limit or the maps won't start [verified on 1.4.6]"},
+    {"name": "price", "offset": 148, "type": "i32", "editable": true, "note": "slot 0 price in hundredths (100 = 1 gold, or 1 Event Gold in the Event Boutique) [verified]"},
+    {"name": "slot0_end_time", "offset": 152, "type": "i32", "editable": false, "note": "always 0 in our files [inferred meaning]"},
+    {"name": "duration", "offset": 156, "type": "i32", "editable": true, "note": "slot 0 duration in seconds, 0 = permanent; stackable items MUST be 0 or the maps won't start (error -32) [verified]"},
+    {"name": "slot0_start_time", "offset": 160, "type": "i32", "editable": false, "note": "always 0 in our files [inferred meaning]"},
+    {"name": "slot0_type", "offset": 164, "type": "i32", "editable": false, "note": "always -1 [verified value, meaning unknown]"},
+    {"name": "status_label", "offset": 172, "type": "i32", "editable": true, "note": "slot 0 status label (0, 1, 2, 3, 15 seen); probably the New/Hot/Sale badge [inferred]"},
+    {"name": "block_a", "offset": 276, "type": "bytes", "length": 16, "editable": false, "note": "new in 1.7.3, meaning unknown; carried through untouched; server copy at server +148 [inferred pairing]"},
+    {"name": "description", "offset": 292, "type": "utf16", "length": 1024, "editable": true, "note": "tooltip text, UTF-16; ^rrggbb colour codes and \\r line breaks [verified]"},
+    {"name": "name", "offset": 1316, "type": "utf16", "length": 64, "editable": true, "note": "name shown in the shop (max 31 characters) [verified]"},
+    {"name": "block_b", "offset": 1380, "type": "bytes", "length": 68, "editable": false, "note": "new in 1.7.3 (item ids and small numbers seen: likely gift/bonus fields); carried through untouched; server copy at server +164 [inferred]"}
+  ]
+}

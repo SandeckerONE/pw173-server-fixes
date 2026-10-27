@@ -1,4 +1,4 @@
-## 18. Adding Bless Box items (Jones' Blessing, O'Malley's Blessing, ...)
+# 17. Adding Bless Box items (Jones' Blessing, O'Malley's Blessing, ...)
 ✅ *[tested on the 1.7.3 e344 / t187 package, Ubuntu 26.04 VM]*
 
 **Short version:** do not sell a Bless Box straight from the Boutique. Sell the item's **Ticket** and let the ticket's quest hand out the blessing. Shop-bought copies look fine but give no stats. Quest-delivered copies work, with the original, unedited `elements.data` and `tasks.data`.
@@ -71,3 +71,6 @@ You do **not** need to touch `elements.data` or `tasks.data`. We tested this twi
 - Effect entries (84 bytes each, near the start of the effect table): for example `Attack Level +8`, `D_L08`, `AD_L08` (= +30). *[our own files]*
 
 > **Provenance:** every id, offset and observation above comes from our own client and server files, logs and game screenshots. No code or data was taken from other servers or tools. Item and quest ids come from our own `elements.data` / `tasks.data`; the PWDatabase link is a lookup aid only.
+
+---
+[Back to the guide index](README.md)

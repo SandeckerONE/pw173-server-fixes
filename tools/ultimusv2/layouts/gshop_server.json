@@ -1,0 +1,22 @@
+{
+  "name": "Boutique, server file (gshopsev.data / gshopsev1.data), 1.7.3 e344",
+  "header": {"size": 8, "fields": [
+    {"name": "stamp", "offset": 0, "type": "u32", "editable": false, "note": "same stamp as the paired client file [verified]"},
+    {"name": "count", "offset": 4, "type": "u32", "editable": false, "note": "number of records, same as the client file [verified]"}
+  ]},
+  "record_size": 232,
+  "trailer": "none",
+  "fields": [
+    {"name": "lid", "offset": 0, "type": "i32", "editable": false, "note": "= client lid [verified]"},
+    {"name": "main_tab", "offset": 4, "type": "i32", "editable": true, "note": "= client [verified]"},
+    {"name": "sub_tab", "offset": 8, "type": "i32", "editable": true, "note": "= client [verified]"},
+    {"name": "item_id", "offset": 12, "type": "u32", "editable": true, "note": "= client [verified]"},
+    {"name": "count", "offset": 16, "type": "i32", "editable": true, "note": "= client [verified]"},
+    {"name": "slots", "offset": 20, "type": "bytes", "length": 128, "editable": false, "note": "4 price slots x 32 bytes, identical to client +148..+275 [verified on the Event Boutique pair]"},
+    {"name": "price", "offset": 20, "type": "i32", "editable": true, "note": "slot 0 price [verified]"},
+    {"name": "duration", "offset": 28, "type": "i32", "editable": true, "note": "slot 0 duration [verified]"},
+    {"name": "status_label", "offset": 44, "type": "i32", "editable": true, "note": "slot 0 status label [inferred]"},
+    {"name": "block_a", "offset": 148, "type": "bytes", "length": 16, "editable": false, "note": "= client block_a [inferred]"},
+    {"name": "block_b", "offset": 164, "type": "bytes", "length": 68, "editable": false, "note": "= client block_b [inferred; the last u32 is -1 on both sides, verified]"}
+  ]
+}

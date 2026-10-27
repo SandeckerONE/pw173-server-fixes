@@ -1,0 +1,90 @@
+{
+  "name": "elements.data lists used by the Item flow view, 1.7.3 e344 (all verified on the user's file, md5 c89984b5)",
+  "list_header": "[list id u32][record count u32][record size u32] right before the first record",
+  "lists": {
+    "stats": {
+      "list_id": 1,
+      "record_size": 84,
+      "count_in_our_file": 3559,
+      "note": "stat entries (addons), [id][name 64 B][1][value][0][0]; not items"
+    },
+    "monsters": {
+      "list_id": 39,
+      "record_size": 1748,
+      "count_in_our_file": 12623,
+      "note": "+0 id, +4 type, +8 name (64 B UTF-16)"
+    },
+    "shops": {
+      "list_id": 41,
+      "record_size": 5448,
+      "count_in_our_file": 174,
+      "note": "see elements_npcshops.json"
+    },
+    "npcs": {
+      "list_id": 58,
+      "record_size": 1080,
+      "count_in_our_file": 7406,
+      "note": "see elements_npcshops.json"
+    },
+    "recipes": {
+      "list_id": 70,
+      "record_size": 440,
+      "count_in_our_file": 10787,
+      "note": "+0 id, +4/+8 category, +12 name (debug name, often Chinese)"
+    },
+    "task_items": {
+      "list_id": 75,
+      "record_size": 600,
+      "count_in_our_file": 4053,
+      "note": "packs, vouchers, task items: +0 id, +4 name"
+    }
+  },
+  "monster_drops": {
+    "drop_count_chances": {
+      "offset": 1268,
+      "type": "f32[4]",
+      "note": "chance that one roll drops 0, 1, 2 or 3 items; adds up to 1.0 on every monster with drops [verified on 3,948 monsters]"
+    },
+    "rolls": {
+      "offset": 1284,
+      "type": "u32",
+      "note": "number of rolls per kill (1 on most; 8 on Skeleton Legion Marshal) [inferred meaning, values verified]"
+    },
+    "drops": {
+      "offset": 1292,
+      "type": "pairs_u32_f32",
+      "count": 32,
+      "note": "(item, share); shares add up to 1.0 [verified on 3,948 monsters]; entries with share 0 are placeholders"
+    },
+    "per_kill_formula": "per roll P = sum_k pk * (1 - (1 - share)^k); per kill = 1 - (1 - P)^rolls [calculated, not tested in game]"
+  },
+  "recipe": {
+    "products": {
+      "offset": 92,
+      "type": "pairs_u32_f32",
+      "count": 4,
+      "note": "(item, chance); chances add up to 1.0 [verified on 10,720 recipes]; e.g. 67% 1-star, 30% 2-star, 3% 3-star"
+    },
+    "materials": {
+      "offset": 148,
+      "type": "pairs_u32_u32",
+      "count": 32,
+      "note": "(item, count); at most 8 used [verified]"
+    },
+    "coins": {
+      "offset": 128,
+      "type": "u32",
+      "note": "300 on recipe 4901 [inferred meaning]"
+    }
+  },
+  "task_item_quest": {
+    "offset": 328,
+    "type": "u32",
+    "note": "list 75 only: quest started when the item is used (Genie Pack 23965 -> 18930, Anniversary Pack 25148 -> 20191, Peerless voucher 48060 -> 33836) [verified]; 3,820 of 4,053 records set"
+  },
+  "quest_needed_item_row": "tasks.data: the same 17-byte row as a reward (item, flag, count, chance, period) with chance 0.0 = an item the quest needs or takes. Found only inside the quest's 'needed items' area, quest offset 1560-1700 (usually +1576; +1585 on Bounty Hunter II/III), with row flag 1 and an item id that is not a multiple of 256 (multiples of 256 at other offsets are flag bytes read one position off) [verified: +1576 holds 2,013 different items; e.g. Jones' Blessing Ticket 28297 in quest 22076, LV1 Bounty Order 27384 in 25 Bounty Hunter II quests, Nirvana Palace Key x99 in 22014]. Known gap: a real item whose id is a multiple of 256 is not detected as needed.",
+  "quest_needed_window": [
+    1560,
+    1700
+  ]
+}

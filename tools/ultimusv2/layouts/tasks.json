@@ -1,0 +1,26 @@
+{
+  "name": "Quest file (tasks.data), 1.7.3 t187",
+  "header": {"fields": [
+    {"name": "magic", "offset": 0, "type": "u32", "note": "2475000673 (0x93858361) in our file [verified]"},
+    {"name": "version", "offset": 4, "type": "u32", "note": "187 [verified]"},
+    {"name": "count", "offset": 8, "type": "u32", "note": "number of top-level quest records, 20122 in our file [verified]"},
+    {"name": "offsets", "offset": 12, "type": "u32[count]", "note": "file offset of each quest record, sorted ascending; a record runs to the next offset [verified; BH1 script relies on it, tested in game]"}
+  ]},
+  "quest_record": {"fields": [
+    {"name": "prefix", "offset": 0, "type": "u16", "note": "0 (20070 records) or 1 (52 tutorial-like records); meaning unknown [verified values]"},
+    {"name": "quest_id", "offset": 2, "type": "u32", "note": "[verified]"},
+    {"name": "name", "offset": 6, "type": "utf16_xor", "length": 60, "note": "30 UTF-16 units, each XORed with (quest_id & 0xFFFF); may start with a ^rrggbb colour code [verified]"}
+  ], "note": "sub-quests are nested inside their parent's record; their rewards show up as extra groups in the parent's range [inferred]"},
+  "reward_group": {"fields": [
+    {"name": "flag", "offset": 0, "type": "u8", "note": "0 on fixed lists, 1 on lists with random rows (packs, BH I); not edited [inferred meaning]"},
+    {"name": "rows", "offset": 1, "type": "u32", "note": "number of rows that follow [verified]"}
+  ], "found_by": "scan of the quest's byte range for [flag<=1][n 1..60][n valid rows], overlapping hits dropped (same method as add_bh1_ticket.py, tested in game)"},
+  "reward_row": {"size": 17, "fields": [
+    {"name": "item_id", "offset": 0, "type": "u32", "note": "[verified]"},
+    {"name": "flag", "offset": 4, "type": "u8", "note": "1 on almost every row; meaning unknown [verified values]"},
+    {"name": "count", "offset": 5, "type": "u32", "note": "[verified]"},
+    {"name": "chance", "offset": 9, "type": "f32", "note": "0..1; 1.0 = always; random rows in a pack table add up to 1.0 and one is paid per open [verified on 1.4.6 packs]"},
+    {"name": "period", "offset": 13, "type": "i32", "note": "item lifetime in seconds, 0 = permanent (604800 = 7 days on Jones'/O'Malley's) [verified]"}
+  ]},
+  "editing": "Changing a row is same-size. Adding or removing a row inserts or removes 17 bytes, updates the group's row count, and shifts every quest offset after it (BH1 method, tested in game). The same new tasks.data must go to the server AND every client."
+}

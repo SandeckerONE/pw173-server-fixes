@@ -1,0 +1,21 @@
+{
+  "name": "elements.data item records, 1.7.3 e344 (partial; only what we have mapped)",
+  "note": "elements.data is not parsed list by list yet. Items are found by their name field: the item id sits 4, 8 or 12 bytes before the name depending on the record kind [verified on many items].",
+  "id_positions": [
+    {"back": 12, "kind": "equipment-like records: id, major type, sub type, name (e.g. Bless Boxes 21213/21285, wings, fashion)"},
+    {"back": 8,  "kind": "monsters, stones/gems"},
+    {"back": 4,  "kind": "tickets, materials, packs, vouchers"}
+  ],
+  "records": {
+    "bless_box": {"type_pair": [21213, 21285], "record_size": 1164, "fields": [
+      {"name": "level", "offset": 368, "type": "u32"},
+      {"name": "class_mask", "offset": 388, "type": "u32"},
+      {"name": "required_level", "offset": 392, "type": "u32"},
+      {"name": "quality", "offset": 400, "type": "u32"},
+      {"name": "effects", "offset": 564, "type": "pairs_u32_f32", "count": 32},
+      {"name": "effects_2", "offset": 820, "type": "pairs_u32_f32", "count": 32},
+      {"name": "flags", "offset": 1124, "type": "u32", "note": "0x1 no drop on death, 0x2 no discard, 0x4 no sell, 0x10 no trade, 0x4000 no account stash"}
+    ]}
+  },
+  "stat_entry": {"size": 84, "fields": "[id u32][name 64 B UTF-16][u32 1][u32 value][u32 0][u32 0]"}
+}
