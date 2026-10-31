@@ -73,7 +73,7 @@ class ItemIndex:
         """Index an elements.data already in memory (bytes or bytearray; a bytearray is shared, not copied)."""
         self.data = data
         self.path = path
-        d, out = self.data, []
+        d, out, pend = self.data, [], []
         u = struct.Struct('<I').unpack_from
         step = max(1, len(d) // 50)
         nextp = step
@@ -94,10 +94,23 @@ class ItemIndex:
                 back = 8
             elif ok(c):
                 back = 4
+                if ok(b):
+                    pend.append(len(out))   # [id][type][name] or [id][name]: decided below by how often c repeats
             else:
                 continue
             name = d[s:m.end() - 2].decode('utf-16le', 'replace')
             out.append(Entry(u(d, s - back)[0], name, s, back))
+        # Lists with [id][type][name] records (type id >= 1000, e.g. stones of type 12636, pets of type 8782):
+        # the same "type" value sits right before many names, so a value seen 5+ times there is a type, not an id.
+        freq = {}
+        for k in pend:
+            c = u(d, out[k].name_off - 4)[0]
+            freq[c] = freq.get(c, 0) + 1
+        for k in pend:
+            e = out[k]
+            c, b = u(d, e.name_off - 4)[0], u(d, e.name_off - 8)[0]
+            if freq[c] >= 5 and b != c:
+                e.back, e.id = 8, b
         # mark entries that sit in known non-item lists, and take their id from the record start
         self.lists = {}
         for key, spec in LISTS.items():

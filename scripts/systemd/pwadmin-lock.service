@@ -1,0 +1,13 @@
+[Unit]
+Description=Block pwAdmin/Tomcat ports on the VPN interface
+After=network-pre.target
+Before=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/pwadmin-lock.nft
+ExecStop=/usr/sbin/nft delete table inet pwadmin_lock
+
+[Install]
+WantedBy=multi-user.target

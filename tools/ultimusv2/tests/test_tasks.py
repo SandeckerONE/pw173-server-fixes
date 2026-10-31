@@ -1,4 +1,4 @@
-"""Usage: python tests/test_tasks.py <tasks.data (BH1-patched, md5 17a45032...)>"""
+"""Usage: python tests/test_tasks.py <tasks.data>   (any t187 tasks.data: stock or edited)"""
 import hashlib, os, sys, tempfile, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pwedit.tasks import TasksFile, TasksError, plain
@@ -7,26 +7,17 @@ P = sys.argv[1]; allok = True
 t0 = time.time(); tf = TasksFile(P)
 allok &= ok(len(tf.quests) == 20122, 'loaded %d quests, version %d (%.1fs)' % (len(tf.quests), tf.version, time.time() - t0))
 md5 = lambda: hashlib.md5(tf.data).hexdigest()
-allok &= ok(md5() == '17a4503239dfabbe8160b3a3aa2e478c', 'input is the BH1-patched file')
+IN = md5()
 q = tf.search('22076')[0]; g = tf.groups(q)
 allok &= ok(plain(q.name) == "Jones' Blessing" and len(g) == 1 and g[0].rows[0][1:] == (22198, 1, 1, 1.0, 604800), "quest 22076 reward = Jones' 22198 x1, 7 days")
 allok &= ok(any(x.id == 22208 for x in tf.quests_giving(28524)), "quests_giving(28524) finds O'Malley's Serendipity 22208")
-allok &= ok({x.id for x in tf.quests_giving(30759)} >= set(range(19949, 19965)) | {19967}, 'quests_giving(30759) finds all 17 BH I quests')
-print('   search "bounty hunter i":', [(x.id, plain(x.name)) for x in tf.search('bounty hunter i')[:5]])
-# undo BH1: delete the last row (the ticket) of each BH I group
-BH = list(range(19949, 19965)) + [19967]
-for qid in BH:
-    q = tf.search(str(qid))[0]; gs = tf.groups(q); assert len(gs) == 1
-    assert gs[0].rows[-1][1] == 30759
-    tf.delete_row(q, gs[0], len(gs[0].rows) - 1)
-allok &= ok(md5() == '9abe2781e0373d25ca5a9a2b4f915b1d', 'deleting the 17 ticket rows gives back the ORIGINAL file exactly (md5 9abe2781)')
-# redo BH1 with add_row + set_row
-for qid in BH:
-    q = tf.search(str(qid))[0]; g = tf.groups(q)[0]
-    tf.add_row(q, g, 0)
-    g = tf.groups(q)[0]
-    tf.set_row(g.rows[-1][0], 30759, 1, 1, 1.0, 0)
-allok &= ok(md5() == '17a4503239dfabbe8160b3a3aa2e478c', 're-adding them with the editor gives the BH1 file exactly (md5 17a45032)')
+# round trip on a stock quest: delete the last reward row of the Genie Pack (18930), add it back -> same bytes as the input
+q = tf.search('18930')[0]; g = tf.groups(q)[0]; last = g.rows[-1]
+n = len(tf.data); tf.delete_row(q, g, len(g.rows) - 1)
+allok &= ok(len(tf.data) == n - 17, 'deleting a reward row removes 17 bytes')
+tf.add_row(q, tf.groups(q)[0], 0); g = tf.groups(q)[0]
+tf.set_row(g.rows[-1][0], *last[1:])
+allok &= ok(md5() == IN, 'adding the same row back gives the input file byte for byte')
 # same-size edit + save + reload
 q = tf.search('22208')[0]; g = tf.groups(q)[0]
 tf.set_row(g.rows[0][0], 28524, 1, 1, 1.0, 1209600)

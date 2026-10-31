@@ -1,0 +1,12 @@
+#!/usr/sbin/nft -f
+# /etc/pwadmin-lock.nft - pwAdmin (8080) and Tomcat (5001, 8005) are never reachable over the VPN.
+# pwAdmin's AA/cmd.jsp has no login check, so anyone who can reach 8080 can run it.
+# Change "tailscale0" if your VPN interface has another name. Loaded by pwadmin-lock.service.
+table inet pwadmin_lock
+delete table inet pwadmin_lock
+table inet pwadmin_lock {
+    chain input {
+        type filter hook input priority -10; policy accept;
+        iifname "tailscale0" tcp dport { 8080, 5001, 8005 } drop
+    }
+}

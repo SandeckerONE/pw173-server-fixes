@@ -320,7 +320,7 @@ def main():
     ap.add_argument("--game", default=here(),
                     help="folder that contains elementclient.exe (default: the launcher's own folder)")
     ap.add_argument("--server", default=None,
-                    help="patch server address, e.g. http://192.168.56.104:8088 "
+                    help="patch server address, e.g. http://192.168.56.x:8088 "
                          "(default: the first of SERVERS that answers)")
     args = ap.parse_args()
     server = args.server or pick_server(SERVERS)

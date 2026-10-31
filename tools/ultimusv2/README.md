@@ -1,5 +1,7 @@
 # PW173 Editor (in-house)
 
+Folders: [`docs/`](docs/README.md) (how-tos) · [`screenshots/`](screenshots/README.md) · [`releases/`](releases/README.md) (where the .exe goes) · `layouts/` (the byte layouts it loads) · `pwedit/` (code) · `tests/`.
+
 An in-house editor for our Perfect World 1.7.3 (e344 / t187) server, built only from the code and methods we worked out ourselves. No outside editor code is used.
 
 **What it does (stages 1a to 1d):**
@@ -15,7 +17,7 @@ Click **Open game data folder...** at the top and pick a client's `element\data`
 - **where-used** in Item lookup: select an item and the top of the panel lists the NPC shops that sell it (and which NPCs), the quests that give it (count, chance, lifetime), and the open Boutique records,
 - **double-click** an item anywhere (Boutique record, quest reward row, NPC shop slot) to jump to it in Item lookup.
 
-**Version check:** the editor recognises our known file versions (`layouts/known_files.json`) and labels each file live, old or experiment. Opening an OLD file (for example the friends folder's original `elements.data` or `tasks.data`) shows a warning, because edits made from it would drop later changes such as the Palette swap or the BH1 tickets. When a new version goes live, add its md5 to that file.
+**Version check:** the editor can label each file it opens as live, old or experiment, from a list of md5s you keep. The published `layouts/known_files.json` is an empty template; put your own list in `layouts/known_files.local.json` (same format, kept out of git by `.gitignore`). Opening an OLD file then shows a warning, because edits made from it would drop later changes. When a new version goes live, add its md5 there. Note: `build_exe.bat` bundles the `layouts` folder, local list included, so don't hand out an exe built with your private list.
 
 ## Item flow (where an item comes from and where it goes)
 The **Item flow** tab (or **Show item flow** in Item lookup) puts one item in the middle:
@@ -24,7 +26,7 @@ The **Item flow** tab (or **Show item flow** in Item lookup) puts one item in th
 - **Double-click** any linked item to move the view to it; **Back** returns.
 
 How sure each link is:
-- Shops, quest rewards, recipes, pack -> quest: mapped on our own files and checked across the whole file (see [`docs/layouts/LAYOUTS.md`](../../docs/layouts/LAYOUTS.md)).
+- Shops, quest rewards, recipes, pack -> quest: mapped on our own files and checked across the whole file (see [`docs/layouts/`](../../docs/layouts/README.md)).
 - Monster drops: the table layout is checked on all 3,948 monsters that drop something; the "per kill" percentage is *calculated* from it and has not been tested in game. Server-side extra drops (`extra_drops.sev` on the VM) are not included.
 - "Needed by quest": read from the quest's needed-items area. An item whose id is an exact multiple of 256 can't be told apart from flag bytes there, so it won't show as needed.
 
@@ -39,7 +41,7 @@ How sure each link is:
 - Blocked: a timed item (duration > 0) with a count above 1, because stackable items with a duration stop the maps from starting (error -32). There's also a warning when a timed item's name looks stackable (ticket, pack, potion, ...).
 - Unknown 1.7.3 fields are copied through untouched.
 - `elements.data` is only ever read. Open a copy anyway.
-- Quest rewards: chance must be above 0% and at most 100%; the only row of a group can't be deleted; a saved `tasks.data` must load back with the same 20,122 quests or the save is reported as failed. Adding or deleting a row uses the same method as the BH1 script that was tested in game (the editor rebuilds that exact file byte for byte).
+- Quest rewards: chance must be above 0% and at most 100%; the only row of a group can't be deleted; a saved `tasks.data` must load back with the same 20,122 quests or the save is reported as failed. Adding or deleting a row uses the same method as the [BH I script](../../examples/bh1_event_gold/README.md) that was tested in game (the editor rebuilds that exact file byte for byte).
 
 ## Putting a new elements.data live (NPC shops)
 Same as tasks.data: ONE file for the server (`/opt/gamed/config/elements.data`) and every client (`element\data\elements.data`). Snapshot first, back up the live file, restart, check `GS (maps)` is `[UP]`.
@@ -56,7 +58,7 @@ Same as tasks.data: ONE file for the server (`/opt/gamed/config/elements.data`) 
 ## How it is built
 - `layouts/*.json`: the byte layouts. Each field has its offset, type, whether it's editable, and a note saying how it was confirmed ([verified] or [inferred]). To support something new, map it by hand, add it to a table, then add a screen.
 - `pwedit/layout.py` reads the tables. `pwedit/shop.py` handles Boutique pairs and the safety checks. `pwedit/elements.py` handles item lookup. `pwedit/tasks.py` handles quest rewards (layout in `layouts/tasks.json`). `pwedit/npcshop.py` handles NPC shops (layout in `layouts/elements_npcshops.json`). `pwedit/known.py` labels file versions from `layouts/known_files.json`. `pwedit/flow.py` builds the Item flow from `layouts/elements_flow.json`. `pwedit/gui.py` is the window.
-- Tests run against real files: `py tests\test_real_files.py <gshop1.data> <gshopsev1.data> [<gshop.data>] [<elements.data copy>]` `py tests\test_tasks.py <tasks.data>` (expects the BH1-patched file, md5 17a45032...) `py tests\test_npcshops.py <elements.data copy>`; the window tests (`tests\test_gui_*.py`) use a stand-in for the window toolkit.
+- Tests run against real files: `py tests\test_real_files.py <gshop1.data> <gshopsev1.data> [<gshop.data>] [<elements.data copy>]` `py tests\test_tasks.py <tasks.data>` `py tests\test_npcshops.py <elements.data copy>`; the window tests (`tests\test_gui_*.py`) use a stand-in for the window toolkit.
 
 ## Known limits
 - Item lookup finds items by their name field. A few names with unusual characters (Chinese, rare symbols) won't show up in name search. Search by id instead.

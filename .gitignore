@@ -7,3 +7,9 @@ dist/
 *.data
 *.sev
 *.pck
+
+# your own file-version list for the editor
+tools/ultimusv2/layouts/known_files.local.json
+# launcher art is not shipped
+tools/launcher/*.gif
+*.exe

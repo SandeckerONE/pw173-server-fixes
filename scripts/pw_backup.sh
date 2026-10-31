@@ -16,7 +16,8 @@ for i in $(seq 60); do pgrep -x gamedbd >/dev/null || break; sleep 1; done
 if pgrep -x gamedbd >/dev/null; then log "ERROR: gamedbd did not stop - no character backup"; else
   tar czf "$OUT/characters.tgz" --exclude='*.log' -C /opt gamedbd uniquenamed && log "characters ok"; fi
 (cd /opt && tar czf "$OUT/configs.tgz" gamed/*.conf maps server treasure_hook/treasure_hook.conf treasure_hook/state 2>/dev/null) && log "configs ok"
-PW_BACKUP=1 /opt/server start > "$OUT/start.txt" 2>&1
+# 9>&- : the game daemons must not inherit the lock file, or they hold the lock until the next manual restart
+PW_BACKUP=1 /opt/server start 9>&- > "$OUT/start.txt" 2>&1
 sleep 20; log "after start: $(/usr/local/bin/pw_authcheck.sh | tail -1)"
 ls -1d $DEST/20*/ 2>/dev/null | head -n -$KEEP | xargs -r rm -rf
 log "done, size $(du -sh "$OUT" | cut -f1)"

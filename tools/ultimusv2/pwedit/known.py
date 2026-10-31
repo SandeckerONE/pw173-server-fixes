@@ -6,6 +6,12 @@ from .layout import base_dir
 
 with open(os.path.join(base_dir(), 'layouts', 'known_files.json'), 'r', encoding='utf-8') as _f:
     KNOWN = json.load(_f)['files']
+# your own versions: layouts/known_files.local.json (same format, kept out of git), added on top
+_local = os.path.join(base_dir(), 'layouts', 'known_files.local.json')
+if os.path.exists(_local):
+    with open(_local, 'r', encoding='utf-8') as _f:
+        for _name, _versions in json.load(_f).get('files', {}).items():
+            KNOWN.setdefault(_name, {}).update(_versions)
 
 
 def identify(path, md5):

@@ -1,16 +1,15 @@
-# Example patch scripts
+# Examples
 
-Small one-job Python scripts from before the [editor](../tools/ultimusv2/README.md) existed. The editor does all of this with checks and a window; these are kept as short, readable examples of the file formats.
+Worked changes we made on our own server, each with its script and the steps around it. They show the method; change the ids for your own server. For general tools see [`tools/utility_scripts/`](../tools/utility_scripts/README.md) and the [editor](../tools/ultimusv2/README.md).
 
-All of them **write a new file and never change the input**, and refuse to run if the file doesn't look exactly as expected.
-
-| Script | Job | Usage |
+| Folder | What it does | Files changed |
 |---|---|---|
-| `dump_item.py` | Read-only: print an item's raw record from `elements.data` | `python dump_item.py elements.data 22198` |
-| `shop_swap_item.py` | Change which item one Event Boutique record sells | `python shop_swap_item.py in out <old id> <new id>` |
-| `shop_set_duration.py` | Set the shop duration (seconds, 0 = permanent) | `python shop_set_duration.py in out 0 28297` |
+| [`bh1_event_gold/`](bh1_event_gold/README.md) | Bounty Hunter I hand-ins also give a 10 Event Gold Ticket | `tasks.data` (server + client) |
+| [`blessing_tickets/`](blessing_tickets/README.md) | Sell Jones' / O'Malley's Blessing so the stats really apply | Event Boutique pair |
+| [`palette_swap/`](palette_swap/README.md) | Replace 5 seasonal Palette of Fortune prizes | `elements.data` (server + client) |
+| [`npc_shop_examples/`](npc_shop_examples/README.md) | Find and change what an NPC sells | `elements.data` (server + client) |
 
-The shop scripts work on `gshop1.data` (client) or `gshopsev1.data` (server). **Patch both** with the same change, and never give a stackable item a duration ([guide page 17](../docs/server-guide/17-bless-boxes.md)).
+Every script writes a new file and never changes its input. Snapshot the VM first, and keep the server and client copies of a file identical.
 
 ---
 [Back to the repository overview](../README.md)

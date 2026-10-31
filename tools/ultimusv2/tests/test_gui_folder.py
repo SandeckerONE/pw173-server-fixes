@@ -3,8 +3,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import fake_tk
 from pwedit import gui
+import hashlib
+import pwedit.known as known
 from pwedit.known import describe
 el, tasks, c1, s1 = sys.argv[1:5]
+md5 = lambda p: hashlib.md5(open(p, 'rb').read()).hexdigest()
+# test with its own version list (the published known_files.json is an empty template)
+known.KNOWN.clear()
+known.KNOWN.update({'elements.data': {md5(el): {'status': 'live', 'label': 'TEST live elements'}, '1' * 32: {'status': 'old', 'label': 'TEST old elements'}},
+                    'tasks.data': {md5(tasks): {'status': 'live', 'label': 'TEST live tasks'}, '2' * 32: {'status': 'experiment', 'label': 'TEST exp'}}})
 fd, mb = fake_tk.fd, fake_tk.mb
 folder = tempfile.mkdtemp()
 os.symlink(el, os.path.join(folder, 'elements.data')); os.symlink(tasks, os.path.join(folder, 'tasks.data'))
@@ -16,7 +23,7 @@ app.poll()
 assert app.index.ready and app.npcshops and app.tasks
 assert app.index.data is app.npcshops.data, 'index and NPC shops share one copy of elements.data'
 info = app.data_info['text']; print('   info:', info)
-assert 'live UltimusV2 (Palette' in info and 'BH1' in info and 'OLD' not in info
+assert 'TEST live elements' in info and 'TEST live tasks' in info and 'OLD' not in info
 assert not any(x[0] == 'showwarning' for x in mb.shown), 'no warning for live files'
 # where-used for Jones' Blessing Ticket (quests? no; NPC? no) and Small Healing Potion (NPC shops) and Jones' Blessing (quest 22076)
 w = app.where_used(22198); print('\n'.join('   ' + l for l in w.splitlines()[:6]))
@@ -33,8 +40,8 @@ assert 'Broken Red Jade' in app.dumpbox.t
 fd.answers = [c1, s1]; app.open_pair(); app.tv.selection_set('149'); app._dbl_shoprec()
 assert 'In the open Boutique pair: 1 record' in app.dumpbox.t, app.dumpbox.t[:600]
 # known-version tags
-assert describe('x/tasks.data', '9abe2781e0373d25ca5a9a2b4f915b1d')[1] == 'old'
-assert describe('x/elements.data', 'f67769d87bcc00c0c00e58fc8fcfca31')[1] == 'old'
-assert describe('x/elements_copy.data', 'c89984b59b8372a794a0e5c9da9f9f33')[1] == 'live'
+assert describe('x/elements.data', '1' * 32)[1] == 'old'
+assert describe('x/tasks.data', '2' * 32)[1] == 'experiment'
+assert describe('x/elements_copy.data', md5(el))[1] == 'live'
 assert describe('x/whatever.data', '0' * 32)[1] == 'unknown'
 print('FOLDER / CROSS-INTEGRATION: ALL PASS')

@@ -1,5 +1,5 @@
 {
-  "name": "elements.data lists used by the Item flow view, 1.7.3 e344 (all verified on the user's file, md5 c89984b5)",
+  "name": "elements.data lists used by the Item flow view, 1.7.3 e344 (all verified on our own file)",
   "list_header": "[list id u32][record count u32][record size u32] right before the first record",
   "lists": {
     "stats": {

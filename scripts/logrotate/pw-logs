@@ -1,0 +1,24 @@
+# /etc/logrotate.d/pw-logs - rotate the PW 1.7.3 server logs in /opt/logs
+# copytruncate: the daemons keep their log files open, so copy then empty instead of moving.
+# No delaycompress: with maxsize it leaves one huge uncompressed copy behind.
+/opt/logs/*.log /opt/logs/world2.formatlog /opt/logs/world2.trace /opt/logs/world2.err /opt/logs/statinfom {
+    su root root
+    daily
+    maxsize 100M
+    rotate 7
+    compress
+    missingok
+    notifempty
+    copytruncate
+}
+# money and chat logs: kept longer (useful when a player reports a problem)
+/opt/logs/world2.cash /opt/logs/world2.chat {
+    su root root
+    daily
+    maxsize 100M
+    rotate 30
+    compress
+    missingok
+    notifempty
+    copytruncate
+}

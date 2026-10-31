@@ -1,0 +1,6 @@
+[Unit]
+Description=Stage newest PW backup for the PC to pull
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pw_offsite_stage.sh
